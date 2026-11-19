@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: Zlib */
 
 #include "config.h"
+#include "annotations.h"
 #include "commands.h"
 #include "completion.h"
 #include "callbacks.h"
@@ -443,6 +444,9 @@ void config_load_default(zathura_t* zathura) {
   zathura->modes.index        = girara_mode_add(gsession, "index");
   zathura->modes.insert       = girara_mode_add(gsession, "insert");
   zathura->modes.presentation = girara_mode_add(gsession, "presentation");
+
+  /* cursor/visual mode and annotations */
+  zathura_annot_config(zathura);
 
 #define NORMAL zathura->modes.normal
 #define INSERT zathura->modes.insert

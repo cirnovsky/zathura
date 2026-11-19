@@ -119,6 +119,43 @@ typedef zathura_error_t (*zathura_plugin_page_get_label_t)(zathura_page_t* page,
  */
 typedef girara_list_t* (*zathura_plugin_page_get_signatures)(zathura_page_t* page, void* data, zathura_error_t* error);
 
+/**
+ * Get all characters of the page's text layer (list of zathura_text_char_t)
+ */
+typedef girara_list_t* (*zathura_plugin_page_get_chars_t)(zathura_page_t* page, void* data, zathura_error_t* error);
+
+/**
+ * Get annotations on the page (list of zathura_annotation_t)
+ */
+typedef girara_list_t* (*zathura_plugin_page_get_annotations_t)(zathura_page_t* page, void* data,
+                                                                zathura_error_t* error);
+
+/**
+ * Add a highlight annotation covering the given rectangles (list of zathura_rectangle_t).
+ * Returns the new annotation's id, or -1 on error.
+ */
+typedef int (*zathura_plugin_page_add_highlight_t)(zathura_page_t* page, void* data, girara_list_t* rectangles,
+                                                   const double color[3], const char* contents, const char* author,
+                                                   zathura_error_t* error);
+
+/**
+ * Set the note text of an annotation (NULL or "" removes it)
+ */
+typedef zathura_error_t (*zathura_plugin_page_set_annotation_contents_t)(zathura_page_t* page, void* data, int id,
+                                                                         const char* contents);
+
+/**
+ * Delete an annotation
+ */
+typedef zathura_error_t (*zathura_plugin_page_delete_annotation_t)(zathura_page_t* page, void* data, int id);
+
+/**
+ * Save changes into the document's own file (incrementally if possible).
+ * Sets *needs_reload if the file was rewritten and must be reopened.
+ */
+typedef zathura_error_t (*zathura_plugin_document_save_t)(zathura_document_t* document, void* data,
+                                                          bool* needs_reload);
+
 struct zathura_plugin_functions_s {
   /**
    * Opens a document
@@ -214,6 +251,24 @@ struct zathura_plugin_functions_s {
    * Get signatures.
    */
   zathura_plugin_page_get_signatures page_get_signatures;
+
+  /** Get characters of the text layer */
+  zathura_plugin_page_get_chars_t page_get_chars;
+
+  /** Get annotations */
+  zathura_plugin_page_get_annotations_t page_get_annotations;
+
+  /** Add highlight */
+  zathura_plugin_page_add_highlight_t page_add_highlight;
+
+  /** Set annotation note */
+  zathura_plugin_page_set_annotation_contents_t page_set_annotation_contents;
+
+  /** Delete annotation */
+  zathura_plugin_page_delete_annotation_t page_delete_annotation;
+
+  /** Save into the document's own file */
+  zathura_plugin_document_save_t document_save;
 };
 
 typedef struct zathura_plugin_version_s {

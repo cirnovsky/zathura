@@ -18,6 +18,7 @@
 #include "document.h"
 #include "document-widget.h"
 #include "utils.h"
+#include "annotations.h"
 #include "shortcuts.h"
 #include "page-widget.h"
 #include "page.h"
@@ -445,7 +446,12 @@ gboolean cb_sc_copy_link(GtkEntry* entry, void* data) {
 }
 
 static gboolean file_monitor_reload(void* data) {
-  sc_reload((girara_session_t*)data, NULL, NULL, 0);
+  girara_session_t* session = data;
+  /* ignore the change if it is our own annotation save */
+  if (zathura_annot_is_own_save(session->global.data) == true) {
+    return FALSE;
+  }
+  sc_reload(session, NULL, NULL, 0);
   return FALSE;
 }
 

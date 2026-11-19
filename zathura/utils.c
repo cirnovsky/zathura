@@ -15,6 +15,7 @@
 #include "adjustment.h"
 #include "links.h"
 #include "utils.h"
+#include "annotations.h"
 #include "zathura.h"
 #include "internal.h"
 #include "document.h"
@@ -723,6 +724,9 @@ bool search_document(zathura_t* zathura, girara_argument_t* argument, bool disab
     zathura_jumplist_add(zathura);
     position_set(zathura, pos_x, pos_y);
     zathura_jumplist_add(zathura);
+
+    /* in cursor/visual mode the text cursor follows the search */
+    zathura_annot_follow_search(zathura, target_page, rect);
   } else if (argument->data != NULL && !disable_notify) {
     const char* input  = argument->data;
     char* escaped_text = g_markup_printf_escaped(_("Pattern not found: %s"), input);

@@ -13,7 +13,7 @@ version_array = version.split('.')
 # * zathura_plugin_definition_t: If the struct changes in an ABI-incompatible
 #   way, bump the ABI.
 plugin_api_version = '6'
-plugin_abi_version = '7'
+plugin_abi_version = '8'
 
 conf_data = configuration_data()
 conf_data.set('ZVMAJOR', version_array[0])
@@ -122,6 +122,7 @@ sources = files(
   'girara-gtk/statusbar.c',
   'girara-gtk/utils.c',
   'zathura/adjustment.c',
+  'zathura/annotations.c',
   'zathura/bookmarks.c',
   'zathura/callbacks.c',
   'zathura/commands.c',

@@ -13,6 +13,7 @@
 #include "page.h"
 #include "render.h"
 #include "utils.h"
+#include "annotations.h"
 #include "shortcuts.h"
 #include "zathura.h"
 #include "document-widget.h"
@@ -725,6 +726,9 @@ static gboolean zathura_page_widget_draw(GtkWidget* widget, cairo_t* cairo) {
       cairo_rectangle(cairo, rectangle.x1, rectangle.y1, rectangle.x2 - rectangle.x1, rectangle.y2 - rectangle.y1);
       cairo_fill(cairo);
     }
+
+    /* note markers, visual selection and text cursor */
+    zathura_annot_draw(priv->zathura, priv->page, cairo);
   } else {
     girara_debug("rendering loading screen, flicker might be happening");
 
@@ -1028,6 +1032,12 @@ static gboolean cb_zathura_page_widget_button_press_event(GtkWidget* widget, Gdk
       priv->mouse.selection.y1 = y;
       priv->mouse.selection.x2 = x;
       priv->mouse.selection.y2 = y;
+
+      /* in cursor/visual mode a click moves the text cursor */
+      if (zathura_annot_active(priv->zathura) == true) {
+        const double click_scale = zathura_document_get_scale(zathura_page_get_document(priv->page));
+        zathura_annot_click(priv->zathura, priv->page, x / click_scale, y / click_scale);
+      }
 
     } else if (button->type == GDK_2BUTTON_PRESS || button->type == GDK_3BUTTON_PRESS) {
       /* abort the selection */

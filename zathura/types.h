@@ -3,6 +3,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <stdint.h>
 #include <girara/datastructures.h>
 #include <glib.h>
 
@@ -147,6 +148,39 @@ typedef struct zathura_rectangle_s {
   double x2; /**< X coordinate of point 2 */
   double y2; /**< Y coordinate of point 2 */
 } zathura_rectangle_t;
+
+/**
+ * A single character of a page's text layer, in page coordinates.
+ */
+typedef struct zathura_text_char_s {
+  zathura_rectangle_t box; /**< Bounding box of the character */
+  uint32_t c;              /**< Unicode code point */
+  unsigned int line;       /**< Index of the line on the page */
+  unsigned int block;      /**< Index of the paragraph/block on the page */
+} zathura_text_char_t;
+
+/**
+ * Annotation types known to zathura.
+ */
+typedef enum zathura_annotation_type_e {
+  ZATHURA_ANNOTATION_HIGHLIGHT, /**< Text highlight (may carry a note) */
+  ZATHURA_ANNOTATION_TEXT,      /**< Sticky note */
+  ZATHURA_ANNOTATION_OTHER      /**< Anything else */
+} zathura_annotation_type_t;
+
+/**
+ * An annotation on a page. Lists of these are created by the plugin with a
+ * free function, so callers only need girara_list_free.
+ */
+typedef struct zathura_annotation_s {
+  int id;                         /**< Stable identifier (PDF object number) */
+  zathura_annotation_type_t type; /**< Type */
+  zathura_rectangle_t bounds;     /**< Bounding box */
+  zathura_rectangle_t* rects;     /**< Highlighted areas (may be NULL) */
+  size_t n_rects;                 /**< Number of rects */
+  char* contents;                 /**< Note text (may be NULL) */
+  double color[3];                /**< RGB colour, 0..1 */
+} zathura_annotation_t;
 
 /**
  * Image structure

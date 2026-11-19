@@ -620,3 +620,24 @@ const zathura_plugin_t* zathura_document_get_plugin(zathura_document_t* document
 
   return document->plugin;
 }
+
+zathura_error_t zathura_document_save(zathura_document_t* document, bool* needs_reload) {
+  if (needs_reload != NULL) {
+    *needs_reload = false;
+  }
+  if (document == NULL || document->plugin == NULL) {
+    return ZATHURA_ERROR_INVALID_ARGUMENTS;
+  }
+
+  const zathura_plugin_functions_t* functions = zathura_plugin_get_functions(document->plugin);
+  if (functions->document_save == NULL) {
+    return ZATHURA_ERROR_NOT_IMPLEMENTED;
+  }
+
+  bool reload = false;
+  zathura_error_t ret = functions->document_save(document, document->data, &reload);
+  if (needs_reload != NULL) {
+    *needs_reload = reload;
+  }
+  return ret;
+}

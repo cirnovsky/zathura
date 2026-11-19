@@ -263,4 +263,36 @@ ZATHURA_PLUGIN_API bool zathura_page_label_is_number(zathura_page_t* page);
  */
 ZATHURA_PLUGIN_API girara_list_t* zathura_page_get_signatures(zathura_page_t* page, zathura_error_t* error);
 
+/**
+ * Get the characters of the page's text layer.
+ *
+ * @return list of zathura_text_char_t (free with girara_list_free)
+ */
+ZATHURA_PLUGIN_API girara_list_t* zathura_page_get_chars(zathura_page_t* page, zathura_error_t* error);
+
+/**
+ * Get the annotations on the page.
+ *
+ * @return list of zathura_annotation_t (free with girara_list_free)
+ */
+ZATHURA_PLUGIN_API girara_list_t* zathura_page_get_annotations(zathura_page_t* page, zathura_error_t* error);
+
+/**
+ * Add a highlight annotation. Returns its id or -1.
+ */
+ZATHURA_PLUGIN_API int zathura_page_add_highlight(zathura_page_t* page, girara_list_t* rectangles,
+                                                  const double color[3], const char* contents,
+                                                  const char* author, zathura_error_t* error);
+
+/**
+ * Set or clear the note text of an annotation.
+ */
+ZATHURA_PLUGIN_API zathura_error_t zathura_page_set_annotation_contents(zathura_page_t* page, int id,
+                                                                        const char* contents);
+
+/**
+ * Delete an annotation.
+ */
+ZATHURA_PLUGIN_API zathura_error_t zathura_page_delete_annotation(zathura_page_t* page, int id);
+
 #endif // PAGE_H

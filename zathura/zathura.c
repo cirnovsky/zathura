@@ -40,6 +40,7 @@
 #include "shortcuts.h"
 #include "zathura.h"
 #include "utils.h"
+#include "annotations.h"
 #include "marks.h"
 #include "render.h"
 #include "page.h"
@@ -478,6 +479,7 @@ void zathura_free(zathura_t* zathura) {
   }
 
   document_close(zathura, false);
+  zathura_annot_free(zathura);
 
   /* MIME type detection */
   zathura_content_type_free(zathura->content_type_context);
@@ -1391,6 +1393,9 @@ bool document_close(zathura_t* zathura, bool keep_monitor) {
     girara_setting_get(zathura->ui.session, "window-icon", &window_icon);
     girara_setting_set(zathura->ui.session, "window-icon", window_icon);
   }
+
+  /* forget cursor / annotation state of this document */
+  zathura_annot_reset(zathura);
 
   /* stop rendering */
   zathura_renderer_stop(zathura->sync.render_thread);

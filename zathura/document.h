@@ -354,6 +354,13 @@ ZATHURA_PLUGIN_API unsigned int zathura_document_get_first_page_column(zathura_d
 ZATHURA_PLUGIN_API zathura_error_t zathura_document_save_as(zathura_document_t* document, const char* path);
 
 /**
+ * Save changes (e.g. annotations) into the document's own file.
+ *
+ * @param needs_reload set to true if the file was rewritten and has to be reopened
+ */
+ZATHURA_PLUGIN_API zathura_error_t zathura_document_save(zathura_document_t* document, bool* needs_reload);
+
+/**
  * Generate the document index
  *
  * @param document The document object

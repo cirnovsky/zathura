@@ -166,6 +166,8 @@ struct zathura_s {
 
   zathura_jumplist_t jumplist;
 
+  struct zathura_annot_s* annot; /**< cursor / visual mode and annotations */
+
   struct {
     guint refresh_view;
 #ifdef G_OS_UNIX

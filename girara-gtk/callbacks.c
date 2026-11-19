@@ -82,10 +82,13 @@ gboolean girara_callback_view_key_press_event(GtkWidget* widget, GdkEventKey* ev
 
   girara_session_private_t* session_private = session->private_data;
 
+  /* like vim: while a count is being typed, 0 is a digit, not a shortcut (e.g. 10j) */
+  const bool zero_in_count = keyval == GDK_KEY_0 && clean == 0 && session_private->buffer.n > 0;
+
   /* prepare event */
   for (size_t idx = 0; idx != girara_list_size(session->bindings.shortcuts); ++idx) {
     girara_shortcut_t* shortcut = girara_list_nth(session->bindings.shortcuts, idx);
-    if (session_private->buffer.command != NULL) {
+    if (session_private->buffer.command != NULL || zero_in_count) {
       break;
     }
 
